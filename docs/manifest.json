@@ -1,0 +1,14 @@
+{
+  "name": "GifSticker",
+  "description": "Adds a /gifsticker command that uploads a .gif link as a server sticker.",
+  "authors": [
+    {
+      "name": "you",
+      "id": "000000000000000000"
+    }
+  ],
+  "main": "index.js",
+  "vendetta": {
+    "icon": "ic_image"
+  }
+}
