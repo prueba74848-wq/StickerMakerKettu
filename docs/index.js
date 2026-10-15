@@ -138,19 +138,29 @@ async function makeSticker(guildId, url, name, tags) {
     blob.name = "sticker.gif";
   } catch (e) {}
 
-  const form = new FormData();
-  form.append("name", name);
-  form.append("tags", tags);
-  form.append("description", "");
-  form.append("file", blob, "sticker.gif");
-
-  toast("Uploading sticker...");
-  try {
-    const resp = await fetch(API + "/guilds/" + guildId + "/stickers", {
+  const send = (file) => {
+    const form = new FormData();
+    form.append("name", name);
+    form.append("tags", tags);
+    form.append("description", "");
+    form.append("file", file);
+    return fetch(API + "/guilds/" + guildId + "/stickers", {
       method: "POST",
       headers: { Authorization: token },
       body: form
     });
+  };
+
+  toast("Uploading sticker...");
+  try {
+    let resp;
+    try {
+      // React Native's native file part: it fetches the link itself
+      resp = await send({ uri: url, name: "sticker.gif", type: "image/gif" });
+    } catch (e) {
+      _vendetta.logger.log("[GifSticker] uri upload failed, trying blob: " + String(e));
+      resp = await send(blob);
+    }
     let body = null;
     try {
       body = await resp.json();
